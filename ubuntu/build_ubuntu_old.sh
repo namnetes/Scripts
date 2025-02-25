@@ -39,13 +39,21 @@ install_packages() {
     echo "Installing necessary packages..."
     local packages=(
         apt-transport-https
+        autoconf
+        automake
+        binutils
+        build-essential
+        ccache
+        ccls
         cifs-utils
         colordiff
         curl
         dbus-x11
+        dislocker
         dos2unix
         elfutils
         exuberant-ctags
+        flex
         gawk
         gdb
         git
@@ -55,9 +63,18 @@ install_packages() {
         imagemagick
         indent
         jq
+        libaio1t64
+        libbz2-dev
+        libcurl4-openssl-dev
+        libexpat1-dev
         libpam0g
+        libtool
+        libxext6
+        libxrender1
+        libxtst6
         lsb-release
         man
+        neofetch
         ncat
         nmap
         pdfgrep
@@ -69,9 +86,14 @@ install_packages() {
         stow
         strace
         sudo
+        tmux
         tree
+        unixodbc
+        unixodbc-dev
+        libsqliteodbc
         wget
         xclip
+        zlib1g-dev
     )
     apt install -y "${packages[@]}"
 }
@@ -96,8 +118,7 @@ install_virtualization() {
     read -p "Do you want to install Virtualization stack ? (y/n) " answer
     if [[ "$answer" =~ ^[yY]$ ]]; then
         echo "Installing Virtualization stack..."
-        apt install -y \
-            bridge-utils \
+        apt install bridge-utils \
             libvirt-clients \
             libvirt-clients-qemu \
             libvirt-daemon \
@@ -126,7 +147,6 @@ install_vlc() {
     if [[ "$answer" =~ ^[yY]$ ]]; then
         echo "Installing VLC and codecs..."
         apt install -y \
-            ubuntu-restricted-addons \
             ubuntu-restricted-extras \
             vlc
     fi
