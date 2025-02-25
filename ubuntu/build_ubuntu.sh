@@ -81,13 +81,8 @@ install_python() {
     read -p "Do you want to install Python 3? (y/n) " answer
     if [[ "$answer" =~ ^[yY]$ ]]; then
         echo "Installing Python 3..."
-        apt install -y \
-            build-essential \
-            libffi-dev \
-            libssl-dev \
-            python3 \
-            python3-pip \
-            python3-venv
+        apt install -y python3
+	curl -LsSf https://astral.sh/uv/install.sh | sh
     fi
 }
 
