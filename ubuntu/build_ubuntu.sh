@@ -82,7 +82,7 @@ install_python() {
     if [[ "$answer" =~ ^[yY]$ ]]; then
         echo "Installing Python 3..."
         apt install -y python3
-	curl -LsSf https://astral.sh/uv/install.sh | sh
+        sudo -u $(logname) bash -c "curl -LsSf https://astral.sh/uv/install.sh | sh"
     fi
 }
 
