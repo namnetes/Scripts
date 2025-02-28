@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#Alan
 #==============================================================================
 # Script Name    : build_ubuntu.sh
 # Description    : This script includes everything necessary after a fresh
@@ -46,6 +46,8 @@ install_packages() {
     dos2unix
     elfutils
     exuberant-ctags
+    fd-find
+    fzf
     gawk
     gdb
     git
@@ -66,6 +68,7 @@ install_packages() {
     nmap
     pdfgrep
     plocate
+    ripgrep
     samba
     software-properties-common
     sqlite3
@@ -109,7 +112,7 @@ install_vlc() {
 # Install Starship cross-shell prompt
 install_starship() {
     echo "Installing Starship..."
-    curl -sS https://starship.rs/install.sh | sh
+    curl -sS https://starship.rs/install.sh | sh -s -- --yes
 }
 
 # Install Firacode font
@@ -126,6 +129,8 @@ install_firacode() {
 
 # install Github CLI
 install_githubCLI() {
+  echo "Installing GitHub CLI..."
+  
   mkdir -p /etc/apt/keyrings
 
   wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg \
@@ -139,6 +144,71 @@ githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
     
   apt update
   apt install gh -y
+}
+
+# install Lazygit
+install_lazygit() {
+  echo "Installing lazygit..."
+  
+  # extract lazygit version
+  LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/\
+lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
+  
+  # donwload lazigit in the file named lazygit.tar.gz
+  curl -Lo lazygit.tar.gz \
+"https://github.com/jesseduffield/lazygit/releases/download/\
+v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+  
+  # extract lazygit.tar.gz in lazygit folder
+  tar xf lazygit.tar.gz lazygit
+  
+  # install lazygit in /usr/local/bin/ folder
+  install lazygit -D -t /usr/local/bin/
+  
+  # clear unecessary files and folders
+  rm -rf lazygit lazygit.tar.gz 
+}
+
+install_neovim() {
+  if [ ! -d "/usr/local/nvim" ]; then
+    echo "Installing neovim..."
+    rm -rf /usr/local
+    curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
+    tar -xzf nvim-linux-x86_64.tar.gz
+    mv nvim-linux-x86_64 /usr/local
+    echo "Neovim has been installed in the /usr/local directory"
+  fi
+}
+
+# install_lazyvim
+install_lazyvim() {
+  echo "Installing lazyvim..."
+
+  # Install neovim if not yet done
+  if [ ! -d "/usr/local/nvim" ]; then
+    echo "Neovim is required and must therefore be installed."
+    exit 1
+  fi
+
+  NVIM_VERSION=$(/usr/local/nvim/bin/nvim --version | head -n 1 | awk '{print $2}' | cut -c 2-)
+  echo "The $NVIM_VERSION is installed"
+
+  IFS='.' read -r MAJOR MINOR PATCH <<< "$NVIM_VERSION"
+  if [ "$MAJOR" -lt 0 ] || ([ "$MAJOR" -eq 0 ] && [ "$MINOR" -lt 10 ]) || ([ "$MAJOR" -eq 0 ] && [ "$MINOR" -eq 10 ] && [ "$PATCH" -lt 0 ]); then
+    echo 'Lazyvim requires at least version 0.10.0 or higher.'
+    exit 1
+  fi
+
+  rm -rf ~/.config/nvim
+  rm -rf ~/.local/share/nvim
+  rm -rf ~/.local/state/nvim
+  rm -rf ~/.cache/nvim
+ 
+  # Install lazyvim
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+  rm -rf ~/.config/nvim/.git
+  echo "On the next startup of lzayvim/nvim the installation will be completed.\n" \
+  "It is recommended to run :LazyHealth after installation."
 }
 
 # Install Virtualization stack
@@ -217,16 +287,22 @@ check_wsl() {
 check_root
 update_system
 cleanup_packages
-install_packages
-install_python
-install_gnome_tools
-install_vlc
-install_starship
-install_firacode
-install_githubCLI
-install_virtualization
-install_x11_dependencies
-install_ssh_server
+#install_packages
+#install_python
+#install_gnome_tools
+#install_vlc
+#install_starship
+#install_firacode
+#install_githubCLI
+#install_lazygit
+install_neovim
+
+# "Call the function with the regular user"
+sudo -u $(logname) bash -c "$(declare -f install_lazyvim); install_lazyvim"
+
+#install_virtualization
+#install_x11_dependencies
+#install_ssh_server
 update_locate_db
 cleanup
 check_wsl
