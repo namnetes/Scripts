@@ -20,7 +20,7 @@
 #==============================================================================
 
 # Define workspace directory (Modify if needed)
-WORKSPACE_DIR=~/workspaces/sandbox
+WORKSPACE_DIR=~/Workspaces
 
 # Ensure workspace directory exists
 if [ -d "$WORKSPACE_DIR" ]; then
@@ -31,15 +31,20 @@ fi
 echo "Creating workspace directory: $WORKSPACE_DIR"
 mkdir -p "$WORKSPACE_DIR"
 
-# Create and activate Python virtual environment
-echo "Creating virtual environment..."
-python3 -m venv "$WORKSPACE_DIR/.venv"
-source "$WORKSPACE_DIR/.venv/bin/activate"
+# Create the sandbox project
+echo "Creating sandbox project..."
+uv init $WORKSPACE_DIR/sandbox
 
-# Upgrade pip and install essential packages
-echo "Upgrading pip and installing dependencies..."
-python3 -m pip install --upgrade pip
-python3 -m pip install jupyterlab pandas numpy seaborn requests
+# Create the sandbox virtual environment
+echo "Creating sandbox virtual environement..."
+cd $WORKSPACE_DIR/sandbox
+uv venv
+
+source "./.venv/bin/activate"
+
+# Add dependencies
+echo "Installing dependencies..."
+uv add requests jupyterlab numpy pandas numpy seaborn
 
 # Detect if running in WSL (Windows Subsystem for Linux)
 if grep -qEi "(Microsoft|WSL)" /proc/version &>/dev/null; then
