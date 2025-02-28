@@ -27,6 +27,12 @@ update_system() {
   apt dist-upgrade -y
 }
 
+# update snap
+update_snap() {
+  echo "Updating snap..."
+  snap refresh
+}
+
 # Remove unnecessary packages
 cleanup_packages() {
   echo "Removing unnecessary packages..."
@@ -130,18 +136,18 @@ install_firacode() {
 # install Github CLI
 install_githubCLI() {
   echo "Installing GitHub CLI..."
-  
+
   mkdir -p /etc/apt/keyrings
 
   wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg \
     | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
 
   chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
-  
+
   echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/\
 githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
 | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-    
+
   apt update
   apt install gh -y
 }
@@ -149,24 +155,24 @@ githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
 # install Lazygit
 install_lazygit() {
   echo "Installing lazygit..."
-  
+
   # extract lazygit version
   LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/\
 lazygit/releases/latest" | \grep -Po '"tag_name": *"v\K[^"]*')
-  
+
   # donwload lazigit in the file named lazygit.tar.gz
   curl -Lo lazygit.tar.gz \
 "https://github.com/jesseduffield/lazygit/releases/download/\
 v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-  
+
   # extract lazygit.tar.gz in lazygit folder
   tar xf lazygit.tar.gz lazygit
-  
+
   # install lazygit in /usr/local/bin/ folder
   install lazygit -D -t /usr/local/bin/
-  
+
   # clear unecessary files and folders
-  rm -rf lazygit lazygit.tar.gz 
+  rm -rf lazygit lazygit.tar.gz
 }
 
 install_neovim() {
@@ -203,7 +209,7 @@ install_lazyvim() {
   rm -rf ~/.local/share/nvim
   rm -rf ~/.local/state/nvim
   rm -rf ~/.cache/nvim
- 
+
   # Install lazyvim
   git clone https://github.com/LazyVim/starter ~/.config/nvim
   rm -rf ~/.config/nvim/.git
@@ -286,23 +292,24 @@ check_wsl() {
 # Execute functions
 check_root
 update_system
+update_snap
 cleanup_packages
-#install_packages
-#install_python
-#install_gnome_tools
-#install_vlc
-#install_starship
-#install_firacode
-#install_githubCLI
-#install_lazygit
+install_packages
+install_python
+install_gnome_tools
+install_vlc
+install_starship
+install_firacode
+install_githubCLI
+install_lazygit
 install_neovim
 
 # "Call the function with the regular user"
 sudo -u $(logname) bash -c "$(declare -f install_lazyvim); install_lazyvim"
 
-#install_virtualization
-#install_x11_dependencies
-#install_ssh_server
+install_virtualization
+install_x11_dependencies
+install_ssh_server
 update_locate_db
 cleanup
 check_wsl
