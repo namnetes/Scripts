@@ -9,6 +9,9 @@
 # Compatibility  : Bash Only
 #==============================================================================
 
+# to enable debug mode : set -x
+set +x 
+
 # Exit immediately if a command exits with a non-zero status
 set -e
 
@@ -30,6 +33,7 @@ update_system() {
 # update snap
 update_snap() {
   echo "Updating snap..."
+  pkill firefox
   snap refresh
 }
 
@@ -94,7 +98,14 @@ install_packages() {
 install_python() {
   echo "Installing Python 3..."
   apt install -y python3
+  echo "Installing uv packager..."
   sudo -u $(logname) bash -c "curl -LsSf https://astral.sh/uv/install.sh | sh"
+  
+  PYTHON3_PATH=$(which python3)
+  PYTHON3_DIR=$(echo $PYTHON3_PATH | sed 's/[0-9]*$//')
+  PYTHON3_VERSION=$($PYTHON3_PATH --version | cut -d ' ' -f2 | sed 's/\.[0-9]*$//')
+  update-alternatives --install $PYTHON3_DIR python ${PYTHON3_DIR}${PYTHON3_VERSION} 1
+  update-alternatives --list python
 }
 
 # Install GNOME utilities
@@ -123,14 +134,13 @@ install_starship() {
 
 # Install Firacode font
 install_firacode() {
-  sudo -u $(logname) bash -c "
-    git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
-    cd nerd-fonts/ >/dev/null 2>&1
-    ./install.sh FiraCode >/dev/null 2>&1
-    fc-cache -fv >/dev/null 2>&1
-    cd ..
-    rm -rf nerd-fonts
-  "
+  echo "Installing FiraCode NERD Fonts..."
+  git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git
+  cd nerd-fonts/ >/dev/null 2>&1
+  ./install.sh FiraCode >/dev/null 2>&1
+  fc-cache -fv >/dev/null 2>&1
+  cd ..
+  rm -rf nerd-fonts
 }
 
 # install Github CLI
@@ -178,10 +188,13 @@ v${LAZYGIT_VERSION}/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
 install_neovim() {
   if [ ! -d "/usr/local/nvim" ]; then
     echo "Installing neovim..."
-    rm -rf /usr/local
+    rm /usr/local/bin/nvim
+    rm -rf /usr/local/share/nvim
+    rm -rf /usr/local/lib/nvim
     curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz
     tar -xzf nvim-linux-x86_64.tar.gz
     mv nvim-linux-x86_64 /usr/local
+    rm nvim-linux-x86_64.tar.gz
     echo "Neovim has been installed in the /usr/local directory"
   fi
 }
@@ -197,7 +210,7 @@ install_lazyvim() {
   fi
 
   NVIM_VERSION=$(/usr/local/nvim/bin/nvim --version | head -n 1 | awk '{print $2}' | cut -c 2-)
-  echo "The $NVIM_VERSION is installed"
+  echo "The version $NVIM_VERSION of neovim is installed"
 
   IFS='.' read -r MAJOR MINOR PATCH <<< "$NVIM_VERSION"
   if [ "$MAJOR" -lt 0 ] || ([ "$MAJOR" -eq 0 ] && [ "$MINOR" -lt 10 ]) || ([ "$MAJOR" -eq 0 ] && [ "$MINOR" -eq 10 ] && [ "$PATCH" -lt 0 ]); then
@@ -213,7 +226,7 @@ install_lazyvim() {
   # Install lazyvim
   git clone https://github.com/LazyVim/starter ~/.config/nvim
   rm -rf ~/.config/nvim/.git
-  echo "On the next startup of lzayvim/nvim the installation will be completed.\n" \
+  echo "On the next startup of lazyvim/nvim the installation will be completed.\n" \
   "It is recommended to run :LazyHealth after installation."
 }
 
@@ -299,12 +312,12 @@ install_python
 install_gnome_tools
 install_vlc
 install_starship
-install_firacode
 install_githubCLI
 install_lazygit
 install_neovim
 
 # "Call the function with the regular user"
+sudo -u $(logname) bash -c "$(declare -f install_firacode); install_firacode"
 sudo -u $(logname) bash -c "$(declare -f install_lazyvim); install_lazyvim"
 
 install_virtualization
