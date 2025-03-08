@@ -11,13 +11,56 @@
 # Author        : Alan MARCHAND
 #==============================================================================
 
+#==============================================================================
+# Show help                                                                    #
+#==============================================================================
+show_help() {
+cat << EOF
+Usage: ${0##*/} [-h|--help] <VM_name>
+
+Description:
+This script verifies the existence of a specified VM, checks for an entry in 
+the SSH configuration file ~/.ssh/config of the local user, and confirms that 
+the VM is running. If all conditions are met, it updates only the IP address 
+(HostName) and username (User) associated with the specified VM in the SSH 
+configuration file.
+
+Options:
+  -h, --help         Display this help message and exit.
+
+Parameters:
+  <VM_name>          The name of the virtual machine to check and update.
+EOF
+}
+
+# Parse command-line options
+VM_NAME=""
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            if [ -z "$VM_NAME" ]; then
+                VM_NAME="$1"
+            else
+                echo "Unknown option: $1"
+                show_help
+                exit 1
+            fi
+            ;;
+    esac
+    shift
+done
+
 # Vérifie si le nom de VM a traité a été passé en paramètre
-if [ -z "$1" ]; then
-    echo "Usage: $0 <nom_de_la_VM>"
+if [ -z "$VM_NAME" ]; then
+    echo "Usage: ${0##*/} <nom_de_la_VM>"
+    show_help
     exit 1
 fi
 
-VM_NAME="$1"
 VM_USER="galan"
 
 # Vérifie que la VM existe dans la liste de virsh
@@ -53,13 +96,15 @@ fi
 
 # Mise à jour de la configuration SSH
 sed -i "
-# Trouver la section qui commence par 'Host $VM_NAME' et se termine par une autre ligne Host
+# Trouver la section qui commence par 'Host $VM_NAME' et se termine par une 
+# autre ligne Host
 /^Host $VM_NAME$/,/^Host / {
   # Rechercher la ligne qui commence par 'HostName' et modifier son adresse IP
   s/^\( *HostName *\)\([0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\)/\1$VM_IP/
-  # Rechercher la ligne qui commence par 'User' et modifier le nom d'utilisateur
+  # Rechercher la ligne qui commence par 'User' et modifier le nom 
+  # d'utilisateur
   s/^\( *User *\)\(.*\)/\1$VM_USER/
 }
 " "$SSH_CONFIG_PATH"
 
-echo "Connexion SSH à la VM $VM_NAME ($VM_IP)..."
+echo "$HOME/.ssh/config updated."

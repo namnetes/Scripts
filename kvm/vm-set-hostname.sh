@@ -11,13 +11,56 @@
 # Author         : Alan MARCHAND
 #==============================================================================
 
+#==============================================================================
+# Show help                                                                    #
+#==============================================================================
+show_help() {
+cat << EOF
+Usage: ${0##*/} [-h|--help] <VM_name>
+
+Description:
+This script checks if a specified VM exists and verifies if it is running. 
+If inactive, displays its status and exits. If active, retrieves the hostname 
+of the VM via SSH and prompts the user for a new hostname. 
+
+Prerequisite: SSH key authentication and sudo privileges without password 
+prompt for hostname update.
+
+Options:
+  -h, --help         Display this help message and exit.
+
+Parameters:
+  <VM_name>          The name of the virtual machine to check and update.
+EOF
+}
+
+# Parse command-line options
+VM_NAME=""
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            if [ -z "$VM_NAME" ]; then
+                VM_NAME="$1"
+            else
+                echo "Unknown option: $1"
+                show_help
+                exit 1
+            fi
+            ;;
+    esac
+    shift
+done
+
 # Vérifie si le nom de la VM a été passé en paramètre
-if [ -z "$1" ]; then
-    echo "Usage: $0 <nom_de_la_VM>"
+if [ -z "$VM_NAME" ]; then
+    echo "Usage: ${0##*/} <nom_de_la_VM>"
+    show_help
     exit 1
 fi
-
-VM_NAME="$1"
 
 # Vérifier si la VM existe
 VM_EXISTS=$(virsh list --all | grep "$VM_NAME")
@@ -92,3 +135,4 @@ if [ $? -eq 0 ]; then
 else
     echo "Une erreur s'est produite lors du changement de hostname."
 fi
+

@@ -8,12 +8,46 @@
 # Author         : Alan MARCHAND
 #==============================================================================
 
+#==============================================================================
+# Show help                                                                    #
+#==============================================================================
+show_help() {
+cat << EOF
+Usage: ${0##*/} [-h|--help]
+
+Description:
+This script manages virtual machines by listing and cloning them.
+
+Options:
+  -h, --help         Display this help message and exit.
+
+Parameters:
+  The script does not take any positional parameters. It prompts the user for input during execution.
+EOF
+}
+
+# Parse command-line options
+while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            show_help
+            exit 1
+            ;;
+    esac
+    shift
+done
+
 ###############################################################################
 # Function to list all VMs                                                    #
 ###############################################################################
 list_vms() {
   echo "Available VMs:"
-  echo "----------------"
+  echo "--------------"
   VM_INDEX=1
   VM_MAP=() # Declare VM_MAP as a global associative array
   for VM in $VM_LIST; do
@@ -51,7 +85,7 @@ check_new_vm_name() {
 }
 
 ###############################################################################
-# Function to clone the VM                                                     #
+# Function to clone the VM                                                    #
 ###############################################################################
 clone_vm() {
   echo "Cloning $VM_NAME into a new VM named $NEW_VM_NAME..."
