@@ -1,160 +1,123 @@
 #!/bin/bash
 
-# Désactiver l'extension Dash to Dock étendue (extend-height)
+# Désactiver l'option d'extension verticale de Dash to Dock
 gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
 
-# Définir la position du dock en bas de l'écran
+# Positionner le dock en bas de l'écran
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
 
-# Définir le mode de transparence du dock sur 'FIXED' (fixe)
+# Fixer la transparence du dock en mode "FIXED"
 gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
 
-# Définir l'opacité du fond du dock à 0 (complètement transparent)
+# Rendre le fond du dock totalement transparent
 gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0
 
-# Minimiser en un clic
+# Activer la minimisation par clic sur une application dans le dock
 gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
 
+# Masquer l'icône du dossier personnel sur le bureau
+gsettings set org.gnome.shell.extensions.ding show-home false
+
+# center les nouvelles fenêtres
+gsettings set org.gnome.mutter center-new-windows true
+
 #######################################################################################
-# Energy saving
+# Économies d'énergie
 #######################################################################################
 
-# Définir le mode d'énergie
-# 'powerprofilesctl' sans paramètre liste les modes disponibles
+# Activer le profil d'énergie "Performance"
 powerprofilesctl set performance
 
-# Affiche le % de batterie dans la System Tray
+# Afficher le pourcentage de batterie dans la barre système
 gsettings set org.gnome.desktop.interface show-battery-percentage true
 
-# Eteind l'affichage de l'écran après x secondes. Ici 10 minutes.
+# Éteindre l'écran après 10 minutes d'inactivité
 gsettings set org.gnome.desktop.session idle-delay 600
 
 #######################################################################################
-# Night light & Time définition & color temperature
+# Lumière nocturne et température des couleurs
 #######################################################################################
-gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-#gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-from 20.0
-#gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-to 6.0
+
+# Désactiver la lumière nocturne
+gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
+
+# Définir la température de couleur à 4000K (si activé)
 gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4000
 
 #######################################################################################
-# Auto hide du dock
+# Espaces de travail fixes
 #######################################################################################
 
-# Désactiver l'option 'dock toujours visible' 
+# Désactiver les espaces de travail dynamiques
+gsettings set org.gnome.mutter dynamic-workspaces false
+
+# Fixer le nombre d'espaces de travail à 4
+gsettings set org.gnome.desktop.wm.preferences num-workspaces 4
+
+#######################################################################################
+# Raccourcis clavier
+#######################################################################################
+
+# Aller à un espace de travail spécifique (Super + chiffre)
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-1 "['<Shift><Super>KP_End']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-2 "['<Shift><Super>KP_Down']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-3 "['<Shift><Super>KP_Next']"
+gsettings set org.gnome.desktop.wm.keybindings switch-to-workspace-4 "['<Shift><Super>KP_Left']"
+
+# Déplacer une fenêtre vers un espace de travail spécifique (Alt + chiffre)
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Alt>KP_End']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Alt>KP_Down']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Alt>KP_Next']"
+gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Alt>KP_Left']"
+
+#######################################################################################
+# Masquage automatique du dock
+#######################################################################################
+
+# Désactiver le mode "dock toujours visible"
 gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
 
-# Activer le masquage automatique intelligent du dock
+# Désactiver le masquage intelligent du dock
 gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
 
-# Activer le masquage automatique du dock en mode plein écran
+# Désactiver le masquage auto en plein écran
 gsettings set org.gnome.shell.extensions.dash-to-dock autohide-in-fullscreen false
 
-# Activer le masquage automatique du dock
+# Activer le masquage automatique
 gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
 
 #######################################################################################
-# Ne pas inclure dans le dock les volumes non montés
-#######################################################################################
-gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
-
-#!/bin/bash
-
-# Désactiver l'extension Dash to Dock étendue (extend-height)
-gsettings set org.gnome.shell.extensions.dash-to-dock extend-height false
-
-# Définir la position du dock en bas de l'écran
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-position 'BOTTOM'
-
-# Définir le mode de transparence du dock sur 'FIXED' (fixe)
-gsettings set org.gnome.shell.extensions.dash-to-dock transparency-mode 'FIXED'
-
-# Définir l'opacité du fond du dock à 0 (complètement transparent)
-gsettings set org.gnome.shell.extensions.dash-to-dock background-opacity 0
-
-# Minimiser en un clic
-gsettings set org.gnome.shell.extensions.dash-to-dock click-action 'minimize'
-
-# Activer le coin actif
-# (Toucher le coin supérieur gauche pour ouvrir la vue d'ensemble des activités)
-gsettings set org.gnome.desktop.interface enable-hot-corners true
-
-# Activer les bords de l'écran actif
-# (Déplacer la fenêtre vers les bords haut, gauche ou droite pour redimensionner
-#  la fenêtre)
-
-
-#######################################################################################
-# Energy saving
+# Exclure les volumes non montés du dock
 #######################################################################################
 
-# Définir le mode d'énergie
-# 'powerprofilesctl' sans paramètre liste les modes disponibles
-powerprofilesctl set performance
-
-# Affiche le % de batterie dans la System Tray
-gsettings set org.gnome.desktop.interface show-battery-percentage true
-
-# Eteind l'affichage de l'écran après x secondes. Ici 10 minutes.
-gsettings set org.gnome.desktop.session idle-delay 600
-
-#######################################################################################
-# Night light & Time définition & color temperature
-#######################################################################################
-gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
-#gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-from 20.0
-#gsettings set org.gnome.settings-daemon.plugins.color night-light-schedule-to 6.0
-gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4000
-
-#######################################################################################
-# Auto hide du dock
-#######################################################################################
-
-# Désactiver l'option 'dock toujours visible' 
-gsettings set org.gnome.shell.extensions.dash-to-dock dock-fixed false
-
-# Activer le masquage automatique intelligent du dock
-gsettings set org.gnome.shell.extensions.dash-to-dock intellihide false
-
-# Activer le masquage automatique du dock en mode plein écran
-gsettings set org.gnome.shell.extensions.dash-to-dock autohide-in-fullscreen false
-
-# Activer le masquage automatique du dock
-gsettings set org.gnome.shell.extensions.dash-to-dock autohide true
-
-#######################################################################################
-# Ne pas inclure dans le dock les volumes non montés
-#######################################################################################
 gsettings set org.gnome.shell.extensions.dash-to-dock show-mounts false
 
 #######################################################################################
-# Configurer gnome-text-editor
+# Configuration de Gnome Text Editor
 #######################################################################################
 
-# Modifier la police à FiraCode Retina
-gsettings set org.gnome.TextEditor  custom-font "FiraCode Nerd Font Retina 12"
+# Police personnalisée : FiraCode Retina
+gsettings set org.gnome.TextEditor custom-font "FiraCode Nerd Font Retina 12"
 
-# Activer l'option pour surligner la ligne actuelle
+# Surligner la ligne actuelle
 gsettings set org.gnome.TextEditor highlight-current-line true
 
-# Activer la numérotation des lignes 
+# Activer la numérotation des lignes
 gsettings set org.gnome.TextEditor show-line-numbers true
 
-# Activer l'affichage de la vue d'ensemble (map) 
+# Activer la vue d'ensemble (map)
 gsettings set org.gnome.TextEditor show-map true
 
-# Positionner la marge à 80 caractères
+# Définir une marge à 80 caractères
 gsettings set org.gnome.TextEditor right-margin-position 80
 
-# Ne pas corriger l'orthographe
+# Désactiver la correction orthographique
 gsettings set org.gnome.TextEditor spellcheck false
 
 # Activer l'indentation automatique
 gsettings set org.gnome.TextEditor auto-indent true
 
-# Utiliser des espaces pour l'indentation et définir le nombre d'espaces à 2
-gsettings set org.gnome.TextEditor  indent-style 'space'
-gsettings set org.gnome.TextEditor  indent-width 2
-
-
+# Utiliser des espaces pour l'indentation avec une largeur de 2
+gsettings set org.gnome.TextEditor indent-style 'space'
+gsettings set org.gnome.TextEditor indent-width 2
 
