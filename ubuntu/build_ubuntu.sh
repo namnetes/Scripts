@@ -85,7 +85,7 @@ install_packages() {
     gnome-contacts
     gnome-shell-extensions
     graphviz
-    htop
+    btop++
     imagemagick
     indent
     jq
