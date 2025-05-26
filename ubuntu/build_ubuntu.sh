@@ -124,6 +124,7 @@ install_packages() {
 install_python() {
   echo "Installing Python 3..."
   apt-get install -y python3
+
   echo "Installing uv packager..."
   sudo -u $(logname) bash -c "curl -LsSf https://astral.sh/uv/install.sh | sh"
 
@@ -158,13 +159,19 @@ install_starship() {
   curl -sS https://starship.rs/install.sh | sh -s -- --yes
 }
 
+
 # Install fzf
 install_fzf() {
   echo "Installing fzf..."
 
-  if [ -f "/usr/local/bin/fzf" ]; then
-    rm /usr/local/bin/fzf
-  fi
+  # Récupérer l'utilisateur réel
+  USER_HOME=$(eval echo ~$(logname))
+
+  # Définir le chemin d'installation
+  INSTALL_DIR="$USER_HOME/.local/bin"
+
+  # S'assurer que le dossier existe
+  sudo -u $(logname) mkdir -p "$INSTALL_DIR"
 
   # Récupérer la dernière version disponible
   FZF_VERSION=$(curl -s "https://api.github.com/repos/junegunn/fzf/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+' )
@@ -175,18 +182,18 @@ install_fzf() {
       return 1
   fi
 
-  # Download the archive
-  wget -qO fzf.tar.gz "https://github.com/junegunn/fzf/releases/download/v$FZF_VERSION/fzf-$FZF_VERSION-linux_amd64.tar.gz"
+  # Télécharger l'archive
+  sudo -u $(logname) wget -qO "$INSTALL_DIR/fzf.tar.gz" "https://github.com/junegunn/fzf/releases/download/v$FZF_VERSION/fzf-$FZF_VERSION-linux_amd64.tar.gz"
 
-  # Extract the archive
-  tar -xzf fzf.tar.gz -C /usr/local/bin fzf
+  # Extraire l'archive dans le bon dossier
+  sudo -u $(logname) tar -xzf "$INSTALL_DIR/fzf.tar.gz" -C "$INSTALL_DIR"
 
-  # Clean up temporary files
-  rm -rf fzf.tar.gz
+  # Nettoyer les fichiers temporaires
+  sudo -u $(logname) rm -rf "$INSTALL_DIR/fzf.tar.gz"
 
-  # Verify installation
-  if fzf --version &>/dev/null; then
-     echo "✅ fzf version $FZF_VERSION successfully installed!"
+  # Vérifier l'installation
+  if sudo -u $(logname) "$INSTALL_DIR/fzf" --version &>/dev/null; then
+     echo "✅ fzf version $FZF_VERSION successfully installed in $INSTALL_DIR!"
   else
      echo "❌ Error during fzf installation."
      return 1
@@ -352,23 +359,23 @@ check_root
 update_system
 update_snap
 cleanup_packages
-#install_packages
-#install_python
-#install_gnome_tools
-#install_vlc
-#install_starship
+install_packages
+install_python
+install_gnome_tools
+install_vlc
+install_starship
 install_fzf
-#install_kitty
-#install_githubCLI
-#install_virtualization
-#install_xan
-#install_x11_dependencies
-#install_ssh_server
+install_kitty
+install_githubCLI
+install_virtualization
+install_xan
+install_x11_dependencies
+install_ssh_server
 
 # Unlike other functions executed with root privileges, these two functions must 
 # imperatively be executed in the user space.
-#sudo -u $(logname) bash -c "$(declare -f install_firacode); install_firacode"
-#sudo -u $(logname) bash -c "$(declare -f install_oh-my-bash); install_oh-my-bash"
+sudo -u $(logname) bash -c "$(declare -f install_firacode); install_firacode"
+sudo -u $(logname) bash -c "$(declare -f install_oh-my-bash); install_oh-my-bash"
 
 update_locate_db
 cleanup
