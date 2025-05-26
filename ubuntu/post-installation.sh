@@ -44,6 +44,10 @@ gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled false
 # Définir la température de couleur à 4000K (si activé)
 gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 4000
 
+# Définir le thème sombre
+gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+gsettings set org.gnome.desktop.interface gtk-theme 'Yaru-dark'
+
 #######################################################################################
 # Espaces de travail fixes
 #######################################################################################
@@ -69,6 +73,15 @@ gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-1 "['<Alt>KP_En
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-2 "['<Alt>KP_Down']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-3 "['<Alt>KP_Next']"
 gsettings set org.gnome.desktop.wm.keybindings move-to-workspace-4 "['<Alt>KP_Left']"
+
+# Définir quelques lanceurs
+dconf reset /org/gnome/settings-daemon/plugins/media-keys/calculator
+dconf reset /org/gnome/settings-daemon/plugins/media-keys/home
+dconf reset /org/gnome/settings-daemon/plugins/media-keys/www
+dconf write /org/gnome/settings-daemon/plugins/media-keys/calculator "['<Super>c']"
+dconf write /org/gnome/settings-daemon/plugins/media-keys/home "['<Super>e']"
+dconf write /org/gnome/settings-daemon/plugins/media-keys/www "['<Super>w']"
+
 
 #######################################################################################
 # Masquage automatique du dock

@@ -166,14 +166,33 @@ install_fzf() {
     rm /usr/local/bin/fzf
   fi
 
-  curl -L -o fzf-0.60.2-linux_amd64.tar.gz \
-    https://github.com/junegunn/fzf/releases/download/v0.60.2/fzf-0.60.2-linux_amd64.tar.gz
+  # Récupérer la dernière version disponible
+  FZF_VERSION=$(curl -s "https://api.github.com/repos/junegunn/fzf/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+' )
 
-  tar -xzf fzf-0.60.2-linux_amd64.tar.gz
-  mv fzf /usr/local/bin
-  rm fzf-0.60.2-linux_amd64.tar.gz
-  fzf --version
+  # Vérifier si la récupération a réussi
+  if [[ -z "$FZF_VERSION" ]]; then
+      echo "Error: Unable to retrieve fzf version."
+      return 1
+  fi
+
+  # Download the archive
+  wget -qO fzf.tar.gz "https://github.com/junegunn/fzf/releases/download/v$FZF_VERSION/fzf-$FZF_VERSION-linux_amd64.tar.gz"
+
+  # Extract the archive
+  tar -xzf fzf.tar.gz -C /usr/local/bin fzf
+
+  # Clean up temporary files
+  rm -rf fzf.tar.gz
+
+  # Verify installation
+  if fzf --version &>/dev/null; then
+     echo "✅ fzf version $FZF_VERSION successfully installed!"
+  else
+     echo "❌ Error during fzf installation."
+     return 1
+  fi
 }
+
 
 # Install kitty
 install_kitty() {
@@ -299,11 +318,11 @@ install_firacode() {
   rm -rf nerd-fonts
 }
 
+# Install Oh My Bash
 install_oh_my_bash() {
   echo "Installing Oh My Bash..."
   bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh)"
 }
-
 
 # Update locate database
 update_locate_db() {
@@ -333,23 +352,23 @@ check_root
 update_system
 update_snap
 cleanup_packages
-install_packages
-install_python
-install_gnome_tools
-install_vlc
-install_starship
+#install_packages
+#install_python
+#install_gnome_tools
+#install_vlc
+#install_starship
 install_fzf
-install_kitty
-install_githubCLI
-install_virtualization
-install_xan
-# install_x11_dependencies
-# install_ssh_server
+#install_kitty
+#install_githubCLI
+#install_virtualization
+#install_xan
+#install_x11_dependencies
+#install_ssh_server
 
 # Unlike other functions executed with root privileges, these two functions must 
 # imperatively be executed in the user space.
 #sudo -u $(logname) bash -c "$(declare -f install_firacode); install_firacode"
-#sudo -u $(logname) bash -c "$(declare -f install_oh_my_bash); install_oh-my-bash"
+#sudo -u $(logname) bash -c "$(declare -f install_oh-my-bash); install_oh-my-bash"
 
 update_locate_db
 cleanup
