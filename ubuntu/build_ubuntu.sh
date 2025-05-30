@@ -64,11 +64,37 @@ cleanup_packages() {
   apt-get -y autoremove --purge || true
 }
 
+# Function to add PPA repositories from a predefined list
+add_ppas() {
+  echo "Checking and adding PPA repositories..."
+
+  apt-get install -y software-properties-common
+
+  local ppas=(
+    "ppa:ansible/ansible"
+    # Ajoute ici d'autres PPA sans modifier la logique de la fonction
+  )
+
+  for ppa in "${ppas[@]}"; do
+    # Vérifier si le PPA est déjà ajouté
+    if grep -q "^deb .*${ppa}" /etc/apt/sources.list /etc/apt/sources.list.d/*; then
+      echo "✅ PPA déjà présent : $ppa"
+    else
+      echo "➕ Ajout du PPA : $ppa"
+      sudo add-apt-repository --yes --update "$ppa"
+    fi
+  done
+
+  # Mise à jour après ajout des nouveaux PPA
+  apt-get update
+}
+
 # Install necessary packages
 install_packages() {
   echo "Installing necessary base packages..."
   local packages=(
     apt-transport-https
+    ansible
     bat
     build-essential
     cifs-utils
@@ -359,6 +385,7 @@ check_root
 update_system
 update_snap
 cleanup_packages
+manage_ppa
 install_packages
 install_python
 install_gnome_tools
