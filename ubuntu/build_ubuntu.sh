@@ -111,6 +111,7 @@ install_packages() {
     gnome-calendar
     gnome-contacts
     gnome-shell-extensions
+    gnome-user-share
     graphviz
     btop++
     imagemagick
