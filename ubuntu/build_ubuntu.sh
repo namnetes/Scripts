@@ -103,6 +103,7 @@ install_packages() {
     dbus-x11
     dos2unix
     elfutils
+    ecryptfs-utils
     exuberant-ctags
     fd-find
     gawk
