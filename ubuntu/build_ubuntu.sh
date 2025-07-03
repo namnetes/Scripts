@@ -1,3 +1,4 @@
+
 #!/usr/bin/bash
 
 #==============================================================================
@@ -122,6 +123,7 @@ install_packages() {
     libpam0g
     lsb-release
     man
+    meld
     nautilus-admin
     nautilus-image-converter
     nautilus-share
