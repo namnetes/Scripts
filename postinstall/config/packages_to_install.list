@@ -1,0 +1,139 @@
+################################################################################
+# Fichier : packages_to_install.list
+# Description : Liste complète des paquets à installer via APT
+# Chaque ligne contient le nom du paquet suivi d’un commentaire explicatif.
+# Les lignes vides et celles commençant par '#' sont ignorées par le script.
+################################################################################
+
+###################################
+# 🔧 Outils système
+###################################
+build-essential                      # Outils de compilation (gcc, make, etc.)
+sudo                                 # Exécution de commandes avec élévation
+lsb-release                          # Informations sur la distribution
+software-properties-common           # Gestion des dépôts APT
+apt-transport-https                  # Support HTTPS pour APT
+gnome-tweaks                         # Ajustements visuels GNOME
+gnome-shell-extension-manager        # Interface pour extensions GNOME
+gnome-shell-extensions               # Extensions GNOME Shell
+
+###################################
+# 🧩 Utilitaires shell
+###################################
+curl                                 # Transferts via URL
+wget                                 # Téléchargement HTTP/FTP
+bat                                  # Clone de cat avec syntax highlighting
+btop                                 # Moniteur système moderne
+fd-find                              # Recherche rapide de fichiers
+fzf                                  # Fuzzy finder en CLI
+ripgrep                              # Recherche récursive rapide
+tree                                 # Visualisation d’arborescence
+zoxide                               # Remplacement intelligent de cd
+strace                               # Trace des appels système
+netcat-openbsd                       # Outil réseau polyvalent (TCP/UDP, écoute, scan, debug)
+jq                                   # Manipulation JSON en ligne de commande
+xclip                                # Presse-papiers X11 en ligne de commande
+meld                                 # Comparaison visuelle de fichiers
+colordiff                            # Diff en couleurs
+dos2unix                             # Conversion des fins de ligne
+man-db                               # Pages de manuel
+
+###################################
+# ⚙️  Environnement dynamique
+###################################
+direnv                               # Chargement automatique des variables par projet
+
+###################################
+# 📦 Développement général
+###################################
+git                                  # Gestion de versions distribuée avec Git
+gawk                                 # Traitement avancé de texte avec awk
+gdb                                  # Débogueur pour les programmes C/C++
+exuberant-ctags                      # Génération de tags pour la navigation dans le code source
+stow                                 # Outil de gestion de symlinks (utile pour config dotfiles)
+indent                               # Reformatage automatique du code source C selon les conventions
+
+###################################
+# 🐍 Développement Python
+###################################
+python3-full                         # Installation complète de Python 3 avec bibliothèques standard, IDLE, venv...
+python3-pip                          # Gestionnaire de paquets Python (PyPI)
+python3-venv                         # Outil intégré pour créer des environnements virtuels Python
+python3-pytest                       # Framework moderne pour écrire et exécuter des tests unitaires
+python3-pylsp                        # Serveur LSP Python pour l’autocomplétion et le linting dans les IDE
+sqlite3                              # Système de base de données SQL léger embarqué
+sqlite3-doc                          # Documentation et exemples pour SQLite
+
+# 🔧 À installer via pip — recommandé pour voir les dernières versions
+# et éviter les conflits avec les environnements virtuels Python
+# ------------------------------------------------------------------------------
+# tox                                 # Automatisation des tests sur différents environnements Python
+# flake8                              # Analyse statique du code : erreurs, style, conventions PEP8
+# black                               # Formatage automatique du code source selon les standards Python
+
+###################################
+# 📚 Documentation et visualisation
+###################################
+graphviz                             # Génération de graphes
+pdfgrep                              # Recherche texte dans PDF
+poppler-utils                        # Outils d’extraction PDF
+imagemagick                          # Manipulation d’images
+elfutils                              # Outils pour binaires ELF
+
+###################################
+# 🖥️  Interface et GNOME
+###################################
+nautilus-admin                       # Actions root dans Nautilus
+nautilus-image-converter             # Conversion d’images contextuelle
+nautilus-share                       # Partage de dossiers Samba
+nautilus-wipe                        # Suppression sécurisée
+gnome-calendar                       # Calendrier GNOME
+gnome-contacts                       # Gestion des contacts
+gnome-user-share                     # Partage réseau personnel
+dconf-editor                         # Éditeur GNOME de configuration
+
+###################################
+# 🔐 Sécurité et chiffrement
+###################################
+ecryptfs-utils                       # Dossiers chiffrés
+libpam-pwquality                     # Authentification PAM avec contrôle de mot de passe
+
+###################################
+# 🔌 Réseau et partage
+###################################
+cifs-utils                           # Montage de partages Windows
+samba                                # Serveur de fichiers SMB/CIFS
+bridge-utils                         # Pont réseau (VM, container)
+
+###################################
+# 💻 Virtualisation KVM
+###################################
+libvirt-clients                      # Interface CLI pour libvirt
+libvirt-clients-qemu                 # Clients QEMU pour la gestion libvirt
+libvirt-daemon                       # Service principal libvirt
+libvirt-daemon-driver-lxc            # Support des containers LXC
+libvirt-daemon-driver-vbox           # Support VirtualBox
+qemu-system-x86                      # Émulateur x86 KVM
+virt-manager                         # GUI de gestion de VM
+
+###################################
+# 📺 Multimédia et édition
+###################################
+vlc                                  # Lecteur multimédia
+shotcut                              # Montage vidéo open source
+
+###################################
+# 🔍 Indexation et recherche
+###################################
+plocate                              # Version rapide de locate
+ncdu                                 # Analyse de disque
+
+###################################
+# 🧰 Autres outils utiles
+###################################
+sharutils                            # Archives shell
+helix                                # Éditeur de texte modal
+kitty                                # Terminal GPU moderne
+ubuntu-restricted-addons             # Codecs, Flash, etc.
+ubuntu-restricted-extras             # Polices, codecs, etc.
+dbus-x11                             # Support D-Bus pour X11

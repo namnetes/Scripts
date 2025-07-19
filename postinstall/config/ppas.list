@@ -1,0 +1,4 @@
+ppa:ansible/ansible
+ppa:maveonair/helix-editor
+# Ajoutez d'autres PPAs ici, un par ligne
+# Les lignes commençant par '#' seront ignorées
