@@ -50,7 +50,9 @@ install_starship() {
   fi
 
   log_info "  [ACTION] Exécution du script dans ${starship_target}..."
-  if ! STARSHIP_INSTALL_PATH="${starship_target}" bash "${install_script}" --yes; then
+  #if ! STARSHIP_INSTALL_PATH="${starship_target}" bash "${install_script}" --yes; then
+  if ! STARSHIP_INSTALL_PATH="${starship_target}" sh "${install_script}" --yes; then
+
     log_error "Échec de l’installation de Starship via le script officiel."
     rm -f "${install_script}"
     return 1

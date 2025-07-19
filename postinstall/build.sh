@@ -66,6 +66,7 @@ source "${SCRIPT_DIR}/modules/update_snap.sh"
 source "${SCRIPT_DIR}/modules/cleanup_packages.sh"
 source "${SCRIPT_DIR}/modules/add_ppas.sh"
 source "${SCRIPT_DIR}/modules/install_core_packages.sh"
+source "${SCRIPT_DIR}/modules/install_ubuntu-restricted-addons.sh"
 source "${SCRIPT_DIR}/modules/install_uv.sh"
 source "${SCRIPT_DIR}/modules/install_xan.sh"
 source "${SCRIPT_DIR}/modules/install_starship.sh"
@@ -89,7 +90,7 @@ check_root
 # -----------------------------------------------------------------------------
 
 # Étape 1 : Mise à jour APT
-log_info "Étape 1/13 : Mise à jour du système (APT)."
+log_info "Étape 1/14 : Mise à jour du système (APT)."
 if update_system; then
   log_success "Mise à jour APT terminée."
 else
@@ -97,7 +98,7 @@ else
 fi
 
 # Étape 2 : Mise à jour Snap
-log_info "Étape 2/13 : Mise à jour des paquets Snap."
+log_info "Étape 2/14 : Mise à jour des paquets Snap."
 if update_snap; then
   log_success "Mise à jour Snap terminée."
 else
@@ -105,7 +106,7 @@ else
 fi
 
 # Étape 3 : Nettoyage des paquets inutiles
-log_info "Étape 3/13 : Nettoyage des paquets inutiles."
+log_info "Étape 3/14 : Nettoyage des paquets inutiles."
 if cleanup_packages; then
   log_success "Nettoyage terminé."
 else
@@ -113,7 +114,7 @@ else
 fi
 
 # Étape 4 : Ajout des dépôts PPA
-log_info "Étape 4/13 : Ajout des dépôts PPA."
+log_info "Étape 4/14 : Ajout des dépôts PPA."
 if add_ppas; then
   log_success "Ajout des PPAs terminé."
 else
@@ -121,15 +122,23 @@ else
 fi
 
 # Étape 5 : Installation des paquets essentiels
-log_info "Étape 5/13 : Installation des paquets de base."
+log_info "Étape 5/14 : Installation des paquets de base."
 if install_core_packages; then
   log_success "Installation des paquets essentiels terminée."
 else
   log_warning "Échec lors de l'installation des paquets de base."
 fi
 
+# Étape 6 : Installation du package ubuntu-restricted-addons
+log_info "Étape 6/14 : Installation du package ubuntu-restricted-addons."
+if install_restricted_addons; then
+  log_success "package ubuntu-restricted-addons installé avec succès."
+else
+  log_warning "Échec lors de l'installation de ubuntu-restricted-addons."
+fi
+
 # Étape 6 : Installation du gestionnaire UV
-log_info "Étape 6/13 : Installation du gestionnaire Python UV."
+log_info "Étape 7/14 : Installation du gestionnaire Python UV."
 if install_uv; then
   log_success "UV installé avec succès."
 else
@@ -137,7 +146,7 @@ else
 fi
 
 # Étape 7 : Installation de Xan (CSV Magician)
-log_info "Étape 7/13 : Installation de Xan, outil magique pour les CSV."
+log_info "Étape 8/14 : Installation de Xan, outil magique pour les CSV."
 if install_xan; then
   log_success "Xan installé avec succès."
 else
@@ -145,7 +154,7 @@ else
 fi
 
 # Étape 8 : Installation de Starship (prompt universel)
-log_info "Étape 8/13 : Installation de Starship, l’invite multiplateforme."
+log_info "Étape 9/14 : Installation de Starship, l’invite multiplateforme."
 if install_starship; then
   log_success "Starship installé avec succès."
 else
@@ -153,7 +162,7 @@ else
 fi
 
 # Étape 9 : Installation de GitHub CLI
-log_info "Étape 9/13 : Installation de GitHub CLI (gh)."
+log_info "Étape 10/14 : Installation de GitHub CLI (gh)."
 if install_githubcli; then
   log_success "GitHub CLI installé avec succès."
 else
@@ -161,7 +170,7 @@ else
 fi
 
 # Étape 10 : Installation de la police FiraCode Nerd Font
-log_info "Étape 10/13 : Installation de la police FiraCode Nerd Font."
+log_info "Étape 11/14 : Installation de la police FiraCode Nerd Font."
 if install_firacode; then
   log_success "FiraCode Nerd Font installée avec succès."
 else
@@ -169,7 +178,7 @@ else
 fi
 
 # Étape 11 : Installation d'Oh My Bash
-log_info "Étape 11/13 : Installation d'Oh My Bash."
+log_info "Étape 12/14 : Installation d'Oh My Bash."
 if install_oh_my_bash; then
   log_success "Oh My Bash installé avec succès."
 else
@@ -177,7 +186,7 @@ else
 fi
 
 # Étape 12 : Mise à jour de la base de données plocate
-log_info "Étape 12/13 : Mise à jour de la base plocate."
+log_info "Étape 13/14 : Mise à jour de la base plocate."
 log_debug "Appel de update_plocate_database..."
 if update_plocate_db; then
   log_success "Mise à jour de la base plocate terminée."
@@ -187,7 +196,7 @@ fi
 log_debug "update_plocate_db terminé."
 
 # Étape 13 : Installation d'Oh My Bash
-log_info "Étape 13/13 : Nettoyage général du système."
+log_info "Étape 14/14 : Nettoyage général du système."
 log_debug "Appel de cleanup..."
 if cleanup; then
   log_success "Nettoyage général terminé."

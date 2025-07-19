@@ -30,6 +30,7 @@ fi
 # Exécution du script avec journalisation
 # -----------------------------------------------------------------------------
 # Préserve les variables d’environnement, y compris DEBUG=true si présent
+export CALLER_SCRIPT="run_build.sh"
 sudo -E ./build.sh 2>&1 | tee "${log_file}"
 exit_code="${PIPESTATUS[0]}"
 
