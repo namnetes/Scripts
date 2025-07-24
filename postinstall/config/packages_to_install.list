@@ -134,17 +134,20 @@ ncdu                                 # Analyse de disque
 sharutils                            # Archives shell
 helix                                # Éditeur de texte modal
 kitty                                # Terminal GPU moderne
-ubuntu-restricted-extras             # Polices Microsoft, etc.
 dbus-x11                             # Support D-Bus pour X11
 
-# Un script traite un problème lié à ubuntu-restricted-addons, en particulier
-# à l'installation de ttf-mscorefonts-installer. Lors d'une installation via
-# 'sudo apt install' dans un terminal, l'accord de licence est présenté via
-# une interface debconf interactive (type 'dialogue'). Celle-ci exige une
-# action manuelle (Tab pour naviguer, Entrée pour valider). Or, dans un script
-# non-interactif (ex. post-installation), cette interaction échoue. Pour
-# contourner ce blocage, il faut préconfigurer debconf pour accepter la
-# licence automatiquement avant d'installer le paquet.
-# cf. install_ubuntu-restricted-addons.sh
+# Un script gère l'installation non-interactive de certains paquets.
+# Il vise à résoudre un blocage courant avec 'ubuntu-restricted-addons'
+# et 'ubuntu-restricted-extras', notamment 'ttf-mscorefonts-installer'.
 #
-#ubuntu-restricted-addons            # Codecs, etc.
+# Problème : L'installation manuelle via 'apt install' affiche une licence
+# via une interface interactive 'debconf' (type 'dialogue'). Cela requiert
+# une action utilisateur (Tab/Entrée).
+#
+# Solution : Préconfigurer 'debconf' pour accepter auto la licence
+# AVANT d'installer le paquet, évitant ainsi l'interaction manuelle.
+#
+# Plus de détails : install_ubuntu-restricted-addons.sh
+# 
+# ubuntu-restricted-addons            # Codecs, etc.
+# ubuntu-restricted-extras            # Polices Microsoft, etc.

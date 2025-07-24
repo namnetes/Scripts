@@ -63,10 +63,11 @@ trap 'handle_script_error' ERR
 source "${SCRIPT_DIR}/modules/check_caller_script.sh"
 source "${SCRIPT_DIR}/modules/update_system.sh"
 source "${SCRIPT_DIR}/modules/update_snap.sh"
+source "${SCRIPT_DIR}/modules/remove_snap_firefox.sh"
 source "${SCRIPT_DIR}/modules/cleanup_packages.sh"
 source "${SCRIPT_DIR}/modules/add_ppas.sh"
 source "${SCRIPT_DIR}/modules/install_core_packages.sh"
-source "${SCRIPT_DIR}/modules/install_ubuntu-restricted-addons.sh"
+source "${SCRIPT_DIR}/modules/install_restricted_packages.sh"
 source "${SCRIPT_DIR}/modules/install_uv.sh"
 source "${SCRIPT_DIR}/modules/install_xan.sh"
 source "${SCRIPT_DIR}/modules/install_starship.sh"
@@ -90,7 +91,7 @@ check_root
 # -----------------------------------------------------------------------------
 
 # Étape 1 : Mise à jour APT
-log_info "Étape 1/14 : Mise à jour du système (APT)."
+log_info "Étape 1/15 : Mise à jour du système (APT)."
 if update_system; then
   log_success "Mise à jour APT terminée."
 else
@@ -98,7 +99,7 @@ else
 fi
 
 # Étape 2 : Mise à jour Snap
-log_info "Étape 2/14 : Mise à jour des paquets Snap."
+log_info "Étape 2/15 : Mise à jour des paquets Snap."
 if update_snap; then
   log_success "Mise à jour Snap terminée."
 else
@@ -106,87 +107,95 @@ else
 fi
 
 # Étape 3 : Nettoyage des paquets inutiles
-log_info "Étape 3/14 : Nettoyage des paquets inutiles."
+log_info "Étape 3/15 : Suppression du package Snap firefox."
+if remove_snap_firefox; then
+  log_success "Suppression du package Snap Firefox terminée."
+else
+  log_warning "Échec suppression du package Snap firefox."
+fi
+
+# Étape 4 : Nettoyage des paquets inutiles
+log_info "Étape 4/15 : Nettoyage des paquets inutiles."
 if cleanup_packages; then
   log_success "Nettoyage terminé."
 else
   log_warning "Échec lors du nettoyage des paquets."
 fi
 
-# Étape 4 : Ajout des dépôts PPA
-log_info "Étape 4/14 : Ajout des dépôts PPA."
+# Étape 5 : Ajout des dépôts PPA
+log_info "Étape 5/15 : Ajout des dépôts PPA."
 if add_ppas; then
   log_success "Ajout des PPAs terminé."
 else
   log_warning "Échec lors de l'ajout des PPAs."
 fi
 
-# Étape 5 : Installation des paquets essentiels
-log_info "Étape 5/14 : Installation des paquets de base."
+# Étape 6 : Installation des paquets essentiels
+log_info "Étape 6/15 : Installation des paquets de base."
 if install_core_packages; then
   log_success "Installation des paquets essentiels terminée."
 else
   log_warning "Échec lors de l'installation des paquets de base."
 fi
 
-# Étape 6 : Installation du package ubuntu-restricted-addons
-log_info "Étape 6/14 : Installation du package ubuntu-restricted-addons."
-if install_restricted_addons; then
-  log_success "package ubuntu-restricted-addons installé avec succès."
+# Étape 7 : Installation des paquets ubuntu-restricted (extras/addons)
+log_info "Étape 6/15 : Installation des paquets Ubuntu Restricted."
+if install_restricted_packages; then
+  log_success "Installation des paquets Ubuntu restricted terminée."
 else
-  log_warning "Échec lors de l'installation de ubuntu-restricted-addons."
+  log_warning "Échec lors de l'installation des paquets Ubuntu Restricted."
 fi
 
-# Étape 6 : Installation du gestionnaire UV
-log_info "Étape 7/14 : Installation du gestionnaire Python UV."
+# Étape 8 : Installation du gestionnaire UV
+log_info "Étape 8/15 : Installation du gestionnaire Python UV."
 if install_uv; then
   log_success "UV installé avec succès."
 else
   log_warning "Échec lors de l'installation de UV."
 fi
 
-# Étape 7 : Installation de Xan (CSV Magician)
-log_info "Étape 8/14 : Installation de Xan, outil magique pour les CSV."
+# Étape 9 : Installation de Xan (CSV Magician)
+log_info "Étape 9/15 : Installation de Xan, outil magique pour les CSV."
 if install_xan; then
   log_success "Xan installé avec succès."
 else
   log_warning "Échec lors de l'installation de Xan."
 fi
 
-# Étape 8 : Installation de Starship (prompt universel)
-log_info "Étape 9/14 : Installation de Starship, l’invite multiplateforme."
+# Étape 10 : Installation de Starship (prompt universel)
+log_info "Étape 10/15 : Installation de Starship, l’invite multiplateforme."
 if install_starship; then
   log_success "Starship installé avec succès."
 else
   log_warning "Échec lors de l'installation de Starship."
 fi
 
-# Étape 9 : Installation de GitHub CLI
-log_info "Étape 10/14 : Installation de GitHub CLI (gh)."
+# Étape 11 : Installation de GitHub CLI
+log_info "Étape 11/15 : Installation de GitHub CLI (gh)."
 if install_githubcli; then
   log_success "GitHub CLI installé avec succès."
 else
   log_warning "Échec lors de l'installation de GitHub CLI."
 fi
 
-# Étape 10 : Installation de la police FiraCode Nerd Font
-log_info "Étape 11/14 : Installation de la police FiraCode Nerd Font."
+# Étape 12 : Installation de la police FiraCode Nerd Font
+log_info "Étape 12/15 : Installation de la police FiraCode Nerd Font."
 if install_firacode; then
   log_success "FiraCode Nerd Font installée avec succès."
 else
   log_warning "Échec lors de l'installation de la police."
 fi
 
-# Étape 11 : Installation d'Oh My Bash
-log_info "Étape 12/14 : Installation d'Oh My Bash."
+# Étape 13 : Installation d'Oh My Bash
+log_info "Étape 13/15 : Installation d'Oh My Bash."
 if install_oh_my_bash; then
   log_success "Oh My Bash installé avec succès."
 else
   log_warning "Échec lors de l'installation d'Oh My Bash."
 fi
 
-# Étape 12 : Mise à jour de la base de données plocate
-log_info "Étape 13/14 : Mise à jour de la base plocate."
+# Étape 14 : Mise à jour de la base de données plocate
+log_info "Étape 14/15 : Mise à jour de la base plocate."
 log_debug "Appel de update_plocate_database..."
 if update_plocate_db; then
   log_success "Mise à jour de la base plocate terminée."
@@ -195,8 +204,8 @@ else
 fi
 log_debug "update_plocate_db terminé."
 
-# Étape 13 : Installation d'Oh My Bash
-log_info "Étape 14/14 : Nettoyage général du système."
+# Étape 15 : Installation d'Oh My Bash
+log_info "Étape 15/15 : Nettoyage général du système."
 log_debug "Appel de cleanup..."
 if cleanup; then
   log_success "Nettoyage général terminé."
