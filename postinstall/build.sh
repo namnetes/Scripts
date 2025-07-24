@@ -21,8 +21,6 @@
 # Aide : affichage des options disponibles
 # -----------------------------------------------------------------------------
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
-  echo "Usage : $0 [--dry-run] [--help]"
-  echo
   echo "Script de post-installation pour Ubuntu 24.04."
   echo
   echo "Options disponibles :"
@@ -63,17 +61,14 @@ trap 'handle_script_error' ERR
 source "${SCRIPT_DIR}/modules/check_caller_script.sh"
 source "${SCRIPT_DIR}/modules/update_system.sh"
 source "${SCRIPT_DIR}/modules/update_snap.sh"
-source "${SCRIPT_DIR}/modules/remove_snap_firefox.sh"
 source "${SCRIPT_DIR}/modules/cleanup_packages.sh"
 source "${SCRIPT_DIR}/modules/add_ppas.sh"
 source "${SCRIPT_DIR}/modules/install_core_packages.sh"
-source "${SCRIPT_DIR}/modules/install_restricted_packages.sh"
 source "${SCRIPT_DIR}/modules/install_uv.sh"
 source "${SCRIPT_DIR}/modules/install_xan.sh"
 source "${SCRIPT_DIR}/modules/install_starship.sh"
 source "${SCRIPT_DIR}/modules/install_githubcli.sh"
 source "${SCRIPT_DIR}/modules/install_firacode.sh"
-source "${SCRIPT_DIR}/modules/install_ohmybash.sh"
 source "${SCRIPT_DIR}/modules/cleanup_system.sh"
 source "${SCRIPT_DIR}/modules/update_plocate_db.sh"
 
@@ -106,14 +101,6 @@ else
   log_warning "Échec lors de la mise à jour Snap."
 fi
 
-# Étape 3 : Nettoyage des paquets inutiles
-log_info "Étape 3/15 : Suppression du package Snap firefox."
-if remove_snap_firefox; then
-  log_success "Suppression du package Snap Firefox terminée."
-else
-  log_warning "Échec suppression du package Snap firefox."
-fi
-
 # Étape 4 : Nettoyage des paquets inutiles
 log_info "Étape 4/15 : Nettoyage des paquets inutiles."
 if cleanup_packages; then
@@ -136,14 +123,6 @@ if install_core_packages; then
   log_success "Installation des paquets essentiels terminée."
 else
   log_warning "Échec lors de l'installation des paquets de base."
-fi
-
-# Étape 7 : Installation des paquets ubuntu-restricted (extras/addons)
-log_info "Étape 6/15 : Installation des paquets Ubuntu Restricted."
-if install_restricted_packages; then
-  log_success "Installation des paquets Ubuntu restricted terminée."
-else
-  log_warning "Échec lors de l'installation des paquets Ubuntu Restricted."
 fi
 
 # Étape 8 : Installation du gestionnaire UV
@@ -186,14 +165,6 @@ else
   log_warning "Échec lors de l'installation de la police."
 fi
 
-# Étape 13 : Installation d'Oh My Bash
-log_info "Étape 13/15 : Installation d'Oh My Bash."
-if install_oh_my_bash; then
-  log_success "Oh My Bash installé avec succès."
-else
-  log_warning "Échec lors de l'installation d'Oh My Bash."
-fi
-
 # Étape 14 : Mise à jour de la base de données plocate
 log_info "Étape 14/15 : Mise à jour de la base plocate."
 log_debug "Appel de update_plocate_database..."
@@ -203,16 +174,6 @@ else
   log_warning "La mise à jour plocate a échoué."
 fi
 log_debug "update_plocate_db terminé."
-
-# Étape 15 : Installation d'Oh My Bash
-log_info "Étape 15/15 : Nettoyage général du système."
-log_debug "Appel de cleanup..."
-if cleanup; then
-  log_success "Nettoyage général terminé."
-else
-  log_warning "Le nettoyage général a rencontré des problèmes."
-fi
-log_debug "cleanup terminé."
 
 # -----------------------------------------------------------------------------
 # Fin du script

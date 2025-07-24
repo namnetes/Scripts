@@ -73,6 +73,7 @@ update_snap() {
     fi
 
     if [[ "${DEBUG:-}" == "true" ]]; then
+      log_info "installation du package ${snap_name} ${option} en cours"
       log_debug "Commande exécutée : snap install ${snap_name} ${option}"
     fi
     if ! snap install "${snap_name}" ${option}; then
